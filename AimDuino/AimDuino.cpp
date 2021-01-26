@@ -97,7 +97,7 @@ void SerialThread()
         }
         readResult = SP->ReadData(incomingData, dataLength);
         incomingData[readResult] = 0;
-         printf("%s", incomingData);
+        // printf("%s", incomingData);
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
@@ -193,7 +193,7 @@ int main()
 
     while (true)
     {
-        //system("cls");
+        system("cls");
         printf("Current weapon: %s\n Current mod: %s\n",
             selectedWeapon.type.c_str(), selectedModifier.type.c_str());
         PrintWeaponSelect();
