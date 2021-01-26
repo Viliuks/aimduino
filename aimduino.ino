@@ -6,9 +6,10 @@
 #define TOKEN_SHOOT 1.f
 #define TOKEN_STOP 0.f
 #define ELEMENTCOUNT(x)  (sizeof(x) / sizeof(x[0]))
-float x[32];
-float y[32];
+float* x = 0;
+float* y = 0;
 float timeout;
+int capacity = 0;
 long currTimeout;
 bool shoot = false;
 
@@ -53,17 +54,22 @@ void loop() {
     }
     if(tokens[0] == TOKEN_TABLE){
       lastMillis = millis();
+      delete[] x;
+      delete[] y;
+      capacity = tokens[2];
+      x = new float[capacity];
+      y = new float[capacity];
       timeout = tokens[1];
       int idx = 0;
       int idy = 0;
-      for(int i = 2; i < 64; i++){
+      for(int i = 3; i < capacity * 2; i++){
         if(i % 2 ){
-          y[idy++] = tokens[i];
-        }else {
           x[idx++] = tokens[i];
+        }else {
+          y[idy++] = tokens[i];
         }
       }
-      for(int i = 0; i < 32; i ++){
+      for(int i = 0; i < capacity; i ++){
         Serial.print(x[i]);
         Serial.print(",");
         Serial.print(y[i]);
@@ -73,7 +79,7 @@ void loop() {
     Serial.flush();
   }
   if(shoot){
-    if((millis() - lastMillis) >= timeout){
+    if((millis() - lastMillis) >= timeout && capacity != idx){
       mouseMove(x[idx], y[idx]);
       idx++;
       lastMillis = millis();
